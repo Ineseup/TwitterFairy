@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/TwitterFairy/bin
+/TwitterFairy/dist
+/TwitterFairy/obj
+/.env
+/.vs/TwitterFairy/v17

@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  twitter-fairy:
+    build:
+      dockerfile: Dockerfile
+      target: run
+      context: .
+    ports:
+      - 5500:5500
+    environment:
+      TWITTER_BEARER_TOKEN: ${TWITTER_BEARER_TOKEN}
