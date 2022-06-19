@@ -58,27 +58,16 @@ namespace TwitterFairy.Services.Twitter
             var result= post.Content.ReadAsStringAsync().Result;
             return createTweetResponse(result);
         }
-        private async Task<bool> connectToBinanceFairy(List<TwitterOutput> twitterResult) 
+        private async Task<bool> connectToBinanceFairy(List<TwitterOutput> twitterResult)
         {
             var randomObject = new { triggers = twitterResult };
             var postUrl = "http://10.2.113.134:8886/api/trigger/check";
             var postContent = new StringContent(JsonConvert.SerializeObject(randomObject), Encoding.UTF8, "application/json");
-            do
-            {
-                try
-                {
-                    var post = await client.PostAsync(postUrl, postContent);
-                    var result = post.Content.ReadAsStringAsync().Result;
-                    Thread.Sleep(10000);
-                }
-                catch (Exception ex)
-                {
-                    Thread.Sleep(10000);
-                }
-            }
-            while (1==1);
 
-            return true;
+            var post = await client.PostAsync(postUrl, postContent);
+            var result = post.Content.ReadAsStringAsync().Result;
+
+            return post.IsSuccessStatusCode;
         }
 
         private List<TwitterOutput> createTweetResponse(string responseStr) 
@@ -86,7 +75,9 @@ namespace TwitterFairy.Services.Twitter
             var response = new List<TwitterOutput>();
             var json = JObject.Parse(responseStr);
             var data=json["data"];
-            
+            if (data == null || data.Count() < 1)
+                throw new KeyNotFoundException("No twitter data for this request");
+
             foreach (var item in data)
             {
                 response.Add(new TwitterOutput

@@ -22,9 +22,17 @@ namespace TwitterFairy.Controllers
         [HttpPost]
         public async Task<List<TwitterOutput>> Post(TwitterInput dto)
         {
-            var query = _twitterService.CreateQuery(dto.Keywords, dto.AccountsFrom, dto.Hashtags, dto.Cashtags);
-            var tweets = await _twitterService.GetTweets(query);
-            return tweets;   
+            try
+            {
+                var query = _twitterService.CreateQuery(dto.Keywords, dto.AccountsFrom, dto.Hashtags, dto.Cashtags);
+                var tweets = await _twitterService.GetTweets(query);
+                return tweets;   
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError(ex.StackTrace);
+                throw new KeyNotFoundException("No tweets found!");
+            }
         }
     }
 }
